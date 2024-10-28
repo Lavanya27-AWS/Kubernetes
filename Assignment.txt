@@ -1,0 +1,67 @@
+
+git clone https://github.com/ashishrpandey/example-voting-app
+cd example-voting-app
+cd k8s-specifications
+kubectl apply -f .
+kubectl get po -o wide
+kubectl get service
+kubectl get deploy
+kubectl get rs
+cat vote-service.yaml
+cat result-service.yaml
+ Run the Voter and Result application using the below cmd
+PublicIP::Port
+Voter application:
+http://18.143.138.27:31002/ 
+Result Application:
+http://18.143.138.27:31003/
+
+Delete the VOTE Pod:
+kubectl get po -o wide
+NAME                      READY   STATUS    RESTARTS   AGE   IP              NODE               NOMINATED NODE   READINESS GATES
+db-58cc845644-tdr99       1/1     Running   0          16m   192.168.4.76    ip-172-31-34-210   <none>           <none>
+redis-6878558678-7bhvz    1/1     Running   0          16m   192.168.4.99    ip-172-31-34-210   <none>           <none>
+result-86bc6f7b5d-whkk2   1/1     Running   0          16m   192.168.4.87    ip-172-31-34-210   <none>           <none>
+vote-7d884dd585-qfbmf     1/1     Running   0          16m   192.168.4.89    ip-172-31-34-210   <none>           <none>
+worker-6fc5d5b668-szjf7   1/1     Running   0          16m   192.168.4.103   ip-172-31-34-210   <none>           <none>
+
+kubectl delete po vote-7d884dd585-qfbmf
+
+kubectl get po -o wide
+NAME                      READY   STATUS    RESTARTS   AGE   IP              NODE               NOMINATED NODE   READINESS GATES
+db-58cc845644-tdr99       1/1     Running   0          16m   192.168.4.76    ip-172-31-34-210   <none>           <none>
+redis-6878558678-7bhvz    1/1     Running   0          16m   192.168.4.99    ip-172-31-34-210   <none>           <none>
+result-86bc6f7b5d-whkk2   1/1     Running   0          16m   192.168.4.87    ip-172-31-34-210   <none>           <none>
+vote-7d884dd585-4j5j4     1/1     Running   0          6s    192.168.4.112   ip-172-31-34-210   <none>           <none>
+worker-6fc5d5b668-szjf7   1/1     Running   0          16m   192.168.4.103   ip-172-31-34-210   <none>           <none>
+
+Observation:
+-----> Old Vote pod is deleted and new vote pod is recreated using the replica set.
+-----> Vote application is running without any loosing data.
+
+Delete the WORKER Pod:
+
+ kubectl get po -o wide
+NAME                      READY   STATUS    RESTARTS   AGE     IP              NODE               NOMINATED NODE   READINESS GATES
+db-58cc845644-tdr99       1/1     Running   0          26m     192.168.4.76    ip-172-31-34-210   <none>           <none>
+redis-6878558678-7bhvz    1/1     Running   0          26m     192.168.4.99    ip-172-31-34-210   <none>           <none>
+result-86bc6f7b5d-whkk2   1/1     Running   0          26m     192.168.4.87    ip-172-31-34-210   <none>           <none>
+vote-7d884dd585-hw6mk     1/1     Running   0          8m49s   192.168.4.104   ip-172-31-34-210   <none>           <none>
+worker-6fc5d5b668-szjf7   1/1     Running   0          26m     192.168.4.103   ip-172-31-34-210   <none>           <none>
+
+kubectl delete pod worker-6fc5d5b668-szjf7
+pod "worker-6fc5d5b668-szjf7" deleted
+
+kubectl get po -o wide
+NAME                      READY   STATUS    RESTARTS   AGE    IP              NODE               NOMINATED NODE   READINESS GATES
+db-58cc845644-tdr99       1/1     Running   0          27m    192.168.4.76    ip-172-31-34-210   <none>           <none>
+redis-6878558678-7bhvz    1/1     Running   0          27m    192.168.4.99    ip-172-31-34-210   <none>           <none>
+result-86bc6f7b5d-whkk2   1/1     Running   0          27m    192.168.4.87    ip-172-31-34-210   <none>           <none>
+vote-7d884dd585-hw6mk     1/1     Running   0          9m6s   192.168.4.104   ip-172-31-34-210   <none>           <none>
+worker-6fc5d5b668-47f9r   1/1     Running   0          3s     192.168.4.98    ip-172-31-34-210   <none>           <none>
+
+Observation:
+-----> Old Worker pod is deleted and new Worker pod is recreated using the replica set.
+-----> Worker application is running without any loosing data.
+
+
