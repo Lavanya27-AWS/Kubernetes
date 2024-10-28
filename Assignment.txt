@@ -126,5 +126,9 @@ Result application will hold the latest data after refresh the Voter application
 
 
 Some jargons (just names are enough- dont need sentences) that you learnt from the  Training session
-
+Containerization
+Microservices
+Cluster
+Pod
+replica set
 
