@@ -36,8 +36,8 @@ vote-7d884dd585-4j5j4     1/1     Running   0          6s    192.168.4.112   ip-
 worker-6fc5d5b668-szjf7   1/1     Running   0          16m   192.168.4.103   ip-172-31-34-210   <none>           <none>
 
 Observation:
------> Old Vote pod is deleted and new vote pod is recreated using the replica set.(pod name got changed)
------> Vote application is running without any loosing data.
+-----> Old Vote pod is deleted and new vote pod is recreated using the replica set.(new pod is created with different name)
+-----> Vote  and Result application is running without any loosing data.
 
 Delete the WORKER Pod:
 
@@ -61,8 +61,8 @@ vote-7d884dd585-hw6mk     1/1     Running   0          9m6s   192.168.4.104   ip
 worker-6fc5d5b668-47f9r   1/1     Running   0          3s     192.168.4.98    ip-172-31-34-210   <none>           <none>
 
 Observation:
------> Old Worker pod is deleted and new Worker pod is recreated using the replica set.(pod name got changed)
------> Worker application is running without any loosing data.
+-----> Old Worker pod is deleted and new Worker pod is recreated using the replica set.(new pod is created with different name)
+----->  Vote  and Result applications are running without any loosing data.
 
 Delete the DB Pod:
 
@@ -105,10 +105,11 @@ worker-6fc5d5b668-47f9r   1/1     Running   2 (32s ago)   5m8s   192.168.4.98   
 
 
 Observation:
------> Old DB pod is deleted and new Worker pod is recreated using the replica set. (pod name got changed)
+-----> Old DB pod is deleted and new DB pod pod is recreated using the replica set. (new pod is created with different name)
 ----->  After Creating the New db pod, Result  and worker pods are restarted due to both pods having Dependency on Database. if the db pod delete, dependent pods will restart.
-     Voter and worker pod status moved Error to CrashLoopBackOff then Running status
----> Vote and Result application are running fine.
+     Result and worker pod status moved Error to CrashLoopBackOff then Running status
+--->  Result application displaying the image which is stored in container inside the result pod.
+
 
  your comment on WHY result app STOPPED working after db pod stop
 
@@ -121,8 +122,8 @@ your answer to HOW YOU MADE THE RESULT POD work.
 Result pod is created using the deployment. 
 if the result pod is deleted , it will create the pod based on replicas number which is mentioned in result deployment config.
 
+Result application will hold image data until manual refresh happen for voter application.
 Result application will hold the latest data after refresh the Voter application.
-
 
 
 Some jargons (just names are enough- dont need sentences) that you learnt from the  Training session
@@ -131,4 +132,7 @@ Microservices
 Cluster
 Pod
 replica set
+deployment
+Volumes
+
 
